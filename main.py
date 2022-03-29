@@ -6,10 +6,10 @@ def on_button_pressed_a():
     if not input.button_is_pressed(Button.B):
         if plr_pos[0]-1 <= view_pos[0]:
             view_pos[0]-=1
-        elif world[4-plr_pos[1]][clamp(plr_pos[0] - 1, 0, len(world[0]))] == 0:
+        elif world[clamp(4-(plr_pos[1]),0,len(world)-1)][clamp(plr_pos[0] - 1, 0, len(world[0]))] == 0:
             plr_pos = [clamp(plr_pos[0] - 1, 0, len(world[0])), plr_pos[1]]
     else:
-        if world[4-(plr_pos[1]+2)][plr_pos[0]+1-view_pos[0]] == 0:
+        if world[clamp(4-(plr_pos[1]+2),0,len(world)-1)][plr_pos[0]+1-view_pos[0]] == 0:
             plr_pos = [clamp(plr_pos[0] + 1, 0, len(world[0])), clamp(plr_pos[1] + 2, 0, len(world))]
 input.on_button_pressed(Button.A, on_button_pressed_a)
 
@@ -29,10 +29,10 @@ def on_button_pressed_b():
     if not input.button_is_pressed(Button.A):
         if plr_pos[0]+1 >= view_pos[0]+4:
             view_pos[0]+=2
-        elif world[4-plr_pos[1]][plr_pos[0]-view_pos[0]+1] == 0:
+        elif world[clamp(4-(plr_pos[1]),0,len(world)-1)][plr_pos[0]-view_pos[0]+1] == 0:
             plr_pos = [clamp(plr_pos[0] + 1, 0, len(world[0])), plr_pos[1]]
     else:
-        if world[4-(plr_pos[1]+2)][plr_pos[0]-view_pos[0]-1] == 0:
+        if world[clamp(4-(plr_pos[1]+2),0,len(world)-1)][plr_pos[0]-view_pos[0]-1] == 0:
             plr_pos = [clamp(plr_pos[0] - 1, 0, len(world[0])), clamp(plr_pos[1] + 2, 0, len(world))]
 input.on_button_pressed(Button.B, on_button_pressed_b)
 level1 = [
@@ -80,6 +80,8 @@ def reset(lvl):
 
 def on_forever():
     global plr_pos,t,r_pressed,l_pressed, lvl, winLvl
+    if plr_pos[1] > len(world)-1:
+            plr_pos[1] = len(world)-1
     if t%4==0:
         if plr_pos[1] - 1 < 0:
             basic.show_icon(IconNames.SKULL)
@@ -94,6 +96,8 @@ def on_forever():
             basic.show_string("Win!")
         else:        
             reset(lvl) 
+    if plr_pos[1] > len(world)-1:
+        plr_pos[1] = len(world)-1
     draw()
     basic.pause(300)
     t+=1
